@@ -1,0 +1,21 @@
+*               text=auto
+
+*.txt           text eol=lf
+*.rst           text eol=lf whitespace=trailing-space,-cr-at-eol,space-before-tab,-indent-with-non-tab,tab-in-indent,tabwidth=8
+*.md            text eol=lf whitespace=trailing-space,-cr-at-eol,space-before-tab,-indent-with-non-tab,tab-in-indent,tabwidth=4
+
+*.cfg           text eol=lf
+*.in            text eol=lf
+*.ini           text eol=lf
+*.toml          text eol=lf
+*.yml           text eol=lf whitespace=trailing-space,-cr-at-eol,space-before-tab,-indent-with-non-tab,tab-in-indent,tabwidth=2
+.flake8         text eol=lf
+.coveragerc     text eol=lf
+
+*.py            text eol=lf diff=python whitespace=trailing-space,-cr-at-eol,space-before-tab,-indent-with-non-tab,tab-in-indent,tabwidth=4
+
+LICENSE*        text eol=lf
+
+.gitattributes  text eol=lf export-ignore
+.gitignore      text eol=lf export-ignore
+.travis.yml     text eol=lf export-ignore

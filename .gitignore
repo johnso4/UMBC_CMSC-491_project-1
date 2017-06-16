@@ -1,0 +1,38 @@
+#== python =========
+
+__pycache__/
+*.py[coz]
+
+
+#== setuptools =====
+
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+
+#== pytest =========
+
+.cache/
+prof/
+
+
+#== tox ============
+
+.tox/
+
+
+#== coverage =======
+
+htmlcov/
+.coverage
+.coverage.*
+*.py,cover
+coverage.xml
+
+
+#== log files ======
+
+*.log
