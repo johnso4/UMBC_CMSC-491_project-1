@@ -29,11 +29,10 @@ def main():
         print(u'\n{}\n\nLexical Diversity: {}\nSentiment: {}\n'.format(
             tweet, diversity, sentiment))
 
-    coke_tdm = build_tdm(coke_lists)
-    pepsi_tdm = build_tdm(pepsi_lists)
-
-    display_tdm(coke_tdm)
-    display_tdm(pepsi_tdm)
+    print('\nCoke Term Document Matrix:')
+    display_tdm(build_tdm(coke_lists))
+    print('\nPepsi Term Document Matrix:')
+    display_tdm(build_tdm(pepsi_lists))
 
 
 def build_tdm(corpus):
@@ -49,7 +48,7 @@ def display_tdm(tdm):
     table = PrettyTable(field_names=fields)
     rnd = partial(round, ndigits=2)
     for (word, frequencies) in tdm.items():
-        table.add_row([word] + map(rnd,frequencies))
+        table.add_row([word] + map(rnd, frequencies))
     print(table)
 
 
@@ -109,7 +108,7 @@ def vectorize(tweets):
     """
     tokenizer = TweetTokenizer(preserve_case=False)
     vectors = (tokenizer.tokenize(tweet) for tweet in tweets)
-    regex = re.compile(r'[a-z]')
+    regex = re.compile(r'\w')
     return [[word for word in vector if regex.search(word)]
             for vector in vectors]
 
