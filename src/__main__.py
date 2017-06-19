@@ -33,6 +33,10 @@ def main():
     display_tdm(build_tdm(coke_lists))
     print('\nPepsi Term Document Matrix:')
     display_tdm(build_tdm(pepsi_lists))
+    print('\nCoke Frequency Analysis:')
+    displayWordCount(coke_tweets)
+    print('\nPepsi Frequency Analysis:')
+    displayWordCount(pepsi_tweets)
 
 
 def build_tdm(corpus):
@@ -122,6 +126,24 @@ def log_in():
     """Log in to Twitter."""
     auth = OAuth(oauth_token, oauth_secret, consumer_key, consumer_secret)
     return Twitter(auth=auth)
+
+def displayWordCount(tweets):
+    words=[]
+    for tweet in tweets:
+        for w in tweet.split():
+            words.append(w)
+    
+    cnt = Counter(words)
+    
+    pt = PrettyTable(field_names=['Word','Count'])
+    srtCnt = sorted(cnt.items(), key=lambda pair: pair[1], reverse=True)
+    for kv in srtCnt:
+        pt.add_row(kv)
+    print(pt)
+
+    print("============")
+    print("Lexical Diversity")
+    print(1.0*len(set(words))/len(words))
 
 
 if __name__ == '__main__':
