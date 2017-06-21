@@ -47,14 +47,10 @@ def main():
     print('\nPepsi Frequency Analysis:')
     displayWordCount(pepsi_tweets)
 
-    print
-    print
-    print("Coke dendrogram:")
+    print("\n\nCoke dendrogram:")
     stopped_coke =remove_stopwords(build_tdm(coke_lists))
     filter_coke = remove_sparce_terms(stopped_coke,freq_count=20)
     clustering(filter_coke)
-    print
-    print
     print("\n\nPepsi dendrogram:")
     stopped_pepsi =remove_stopwords(build_tdm(pepsi_lists))
     filter_pepsi = remove_sparce_terms(stopped_pepsi, freq_count =20)   
