@@ -13,6 +13,10 @@ from prettytable import PrettyTable
 
 from credentials import (consumer_key, consumer_secret,
                          oauth_token, oauth_secret)
+from nltk import cluster
+from nltk.cluster import euclidean_distance
+from nltk.corpus import stopwords
+from numpy import array
 
 
 def main():
@@ -34,6 +38,17 @@ def main():
     print('\nPepsi Term Document Matrix:')
     display_tdm(build_tdm(pepsi_lists))
 
+    print
+    print("Coke dendrogram:")
+    stopped_coke =remove_stopwords(build_tdm(coke_lists))
+    filter_coke = remove_sparce_terms(stopped_coke,freq_count=20)
+    clustering(filter_coke)
+    print
+    print
+    print("\n\nPepsi dendrogram:")
+    stopped_pepsi =remove_stopwords(build_tdm(pepsi_lists))
+    filter_pepsi = remove_sparce_terms(stopped_pepsi, freq_count =20)   
+    clustering(filter_pepsi)
 
 def build_tdm(corpus):
     """Return a term document matrix based on the given tweets."""
@@ -89,7 +104,7 @@ def get_sentiment(text):
 def get_tweets():
     """Return a corpus of tweets."""
     search = partial(twitter.search.tweets, count=25, lang='en')
-    coke_tweets = [status['text'] for status in search(q='Coke')['statuses']]
+    coke_tweets = [status['text'] for status in search(q='coca cola')['statuses']]
     pepsi_tweets = [status['text'] for status in search(q='Pepsi')['statuses']]
     return (coke_tweets, pepsi_tweets)
 
@@ -123,6 +138,48 @@ def log_in():
     auth = OAuth(oauth_token, oauth_secret, consumer_key, consumer_secret)
     return Twitter(auth=auth)
 
+def clustering(corpus):
+    """
+    Turns the corpus into two arraies.  One with all the words
+    in it and the other with the frequency matrixes
+    """
+    cluster_freq=[]
+    cluster_words=[]
+    for word, frequencies in corpus.items():
+        cluster_freq.append(array(frequencies))
+        cluster_words.append(word)
+    
+    clusterer = cluster.GAAClusterer(3) 
+    clusters = clusterer.cluster(cluster_freq, True) 
+    clusterer.dendrogram().show(leaf_labels=cluster_words)
+    print
+
+def remove_stopwords(corpus):
+    """
+    Takes simple words like a, the, is.... out of the corpus 
+    returns a filtered list
+    """
+    return {word: frequencies for word, frequencies in corpus.items() 
+             if word not in stopwords.words('english')} 
+
+def remove_sparce_terms(corpus, freq_count):
+    """
+    Removes words that appear less then count form the corpus
+    """
+    result={}
+    for words, frequencies in corpus.items():
+        count =0
+        for freq in frequencies:
+            if freq >0:
+                count+=1
+        if count >=freq_count:
+            result.update({words: frequencies})         
+    if len(result)<4:
+        result.clear()
+        result =remove_sparce_terms(corpus, freq_count= freq_count-1)
+    else:
+        print("Words appear " + str(freq_count) + " times or more in corpus\n")
+    return result
 
 if __name__ == '__main__':
     twitter = log_in()
