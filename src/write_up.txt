@@ -1,1 +1,1 @@
-We choose to use the search api rather then the stream.  We felt to get a better idea of the general sentiment of the Pepsi and coke consumer was to look back over the last week of tweets rather then what is happening right now.
+We choose to use the search api rather then the stream.  We didn't want to have to wait for tweets about the topics we were intrested in to come in.  Also we used vader sentiment 2.5.
