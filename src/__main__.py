@@ -48,12 +48,12 @@ def main():
     displayWordCount(pepsi_tweets)
 
     print("\n\nCoke dendrogram:")
-    stopped_coke =remove_stopwords(build_tdm(coke_lists))
-    filter_coke = remove_sparce_terms(stopped_coke,freq_count=20)
+    stopped_coke = remove_stopwords(build_tdm(coke_lists))
+    filter_coke = remove_sparce_terms(stopped_coke, freq_count=20)
     clustering(filter_coke)
     print("\n\nPepsi dendrogram:")
-    stopped_pepsi =remove_stopwords(build_tdm(pepsi_lists))
-    filter_pepsi = remove_sparce_terms(stopped_pepsi, freq_count =20)   
+    stopped_pepsi = remove_stopwords(build_tdm(pepsi_lists))
+    filter_pepsi = remove_sparce_terms(stopped_pepsi, freq_count=20)
     clustering(filter_pepsi)
 
 
@@ -154,15 +154,16 @@ def log_in():
     auth = OAuth(oauth_token, oauth_secret, consumer_key, consumer_secret)
     return Twitter(auth=auth)
 
+
 def displayWordCount(tweets):
-    words=[]
+    words = []
     for tweet in tweets:
         for w in tweet.split():
             words.append(w)
-    
+
     cnt = Counter(words)
-    
-    pt = PrettyTable(field_names=['Word','Count'])
+
+    pt = PrettyTable(field_names=['Word', 'Count'])
     srtCnt = sorted(cnt.items(), key=lambda pair: pair[1], reverse=True)
     for kv in srtCnt:
         pt.add_row(kv)
@@ -172,57 +173,57 @@ def displayWordCount(tweets):
     print("Lexical Diversity")
     print(1.0*len(set(words))/len(words))
 
+
 def removeUnicode(text):
     asciiText = ""
     for char in text:
         if(ord(char) < 128):
             asciiText = asciiText + char
-
     return asciiText
+
 
 def clustering(corpus):
     """
-    Turns the corpus into two arraies.  One with all the words
-    in it and the other with the frequency matrixes
+    Turn the corpus into two arrays: one with all the words
+    in it and the other with the frequency matrices.
     """
-    cluster_freq=[]
-    cluster_words=[]
+    cluster_freq = []
+    cluster_words = []
     for word, frequencies in corpus.items():
         cluster_freq.append(array(frequencies))
         cluster_words.append(word)
-    
-    clusterer = cluster.GAAClusterer(3) 
-    clusters = clusterer.cluster(cluster_freq, True) 
+
+    clusterer = cluster.GAAClusterer(3)
+    clusters = clusterer.cluster(cluster_freq, True)
     clusterer.dendrogram().show(leaf_labels=cluster_words)
     print
 
+
 def remove_stopwords(corpus):
     """
-    Takes simple words like a, the, is.... out of the corpus 
-    returns a filtered list
+    Take simple words like a, the, is, etc., out of the corpus;
+    return a filtered list.
     """
-    return {word: frequencies for word, frequencies in corpus.items() 
-             if word not in stopwords.words('english')} 
+    return {word: frequencies for word, frequencies in corpus.items()
+            if word not in stopwords.words('english')}
+
 
 def remove_sparce_terms(corpus, freq_count):
-    """
-    Removes words that appear less then count form the corpus
-    """
-    result={}
-    for words, frequencies in corpus.items():
-        count =0
+    """Remove words that appear less than count form the corpus."""
+    result = {}
+    for (words, frequencies) in corpus.items():
+        count = 0
         for freq in frequencies:
-            if freq >0:
-                count+=1
-        if count >=freq_count:
-            result.update({words: frequencies})         
-    if len(result)<4:
+            if freq > 0:
+                count += 1
+        if count >= freq_count:
+            result.update({words: frequencies})
+    if len(result) < 4:
         result.clear()
-        result =remove_sparce_terms(corpus, freq_count= freq_count-1)
+        result = remove_sparce_terms(corpus, freq_count=freq_count-1)
     else:
         print("Words appear " + str(freq_count) + " times or more in corpus\n")
     return result
-
 
 
 if __name__ == '__main__':
